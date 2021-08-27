@@ -1,31 +1,29 @@
 import React, { Component } from 'react'
-const isPurchased = false ;
+
 export default class ProductList extends Component {
     state = {
-        isPurchased: false
+        inShoppingCart: false
     }
 
-    addToQuantity = () => {
-
+    toggleCart = () => {
+        // update inShoppingCart to switch from true to false
         this.setState({
-
-            isPurchased: !this.state.isPurchased
+            // !means replace value with opposite
+            inShoppingCart: !this.state.inShoppingCart
         })
-
-        {this.props.product.quantity = this.props.product.quantity + 1 }  
     }
     render() {
-
+        console.log("we are inside ProductList and this is our props", this.props)
         return (
-            <div onClick={this.addToQuantity}>
-
-                <h3>item: {this.props.product.item}</h3>
-                <h3>brand: {this.props.product.brand}</h3>
-                <h3>units: {this.props.product.units}</h3>
-                <h3>quantity: {this.props.product.quantity}</h3>
-                <h3>isPurchased: {this.props.product.isPurchased}</h3>
-                
-
+            <div onClick={this.toggleCart}>
+            { // Ternary Operator - if else statements
+            //  ? means if condition met => then do this
+            // : means else => then do this 
+            // the purpose of ternary operator is to create simple quick IF/ElSE statements
+            }           
+             {this.props.product.name} 
+             {this.props.product.price} 
+             {this.state.inShoppingCart ? <span>is in shopping cart</span>:""}
             </div>
         )
     }

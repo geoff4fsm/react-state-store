@@ -1,96 +1,192 @@
+// * Before we were importing React by import React from 'react'
+// * Line 3 is a way for us to import one specific part of React
+// * destructing
 import React, { Component } from 'react';
 import products from './data.js';
 import ProductList from './ProductList.js'
-import './App.css';
 
-const isPurchased = false ;
+console.table(products);
+
+// * we are going to create our class component
+// * the shortcut for the class component boilerplate using react code snippets is rcc
+
+// * we can export default on the same line where we create our component
+// * Before we would have to do React.Component
+
+// * superclass
 export default class App extends Component {
+	// we need to initialize our state before our render method
 
-  state = {
-    products: products,
-    item: '',
-    brand: '',
-    units: '',
-    quantity: 0,
-  };
+	// * ===== old syntax ======
+	// * props is data or properties being passed down from a parent component
+	// constructor(props) {
+	//   // * super() refers to the parent component (superclass)
+	//   super(props)
+	//   // * this.state is the object that comes with React Component that we can store data inside
+	//   // * we write our state just like any objects in JS
+	//   this.state = {
+	//     // * key value pairs just like any object, left side is the property name and the right side is the value
+	//     // * the right side refers to the products array list that we imported
+	//     products: products
+	//   }
+  //   // * this line is binding our handleChange function to our component Object
+  //   this.handleChange = this.handleChange.bind(this)
+	// }
 
+	// * ==== new syntax ====
+	// ! HIGHLY RECOMMEND
+	//* we no longer need to initiate our state object with "this"
+	state = {
+		products: products,
+    // we can assign default values to our state properties
+    // value: ''
+    name: '',
+    price: 0,
+    description: "Describe this item"
+	};
 
+  // * under our state we are creating our handleChange function
+  // * handleChange naming convention that many developers use
+  // events are behaviors that user's do on the web browsers
+  // * ===== ARROW FUNCTION =====
+  // * ES6 arrow functions automatically binds to the component object
   handleChange = (event) => {
-
+    // * in our case of input, our event is us typing
     console.log("Below is our event.target")
+    // console.log(event.target)
+    // * we are going to try to update our state
+    // this.state.value = event.target.value
 
+    //* the proper way of updating our state is using the setState() that came with the component
+    // * You need curly brackets inside setState()
     this.setState({
+      // * value is pointing at our state that we are trying to change
+      //* event.target.value is what we typed in the input field
+      // name: event.target.value
 
+      // * we are no longer pointing at one state only, we are using event.target.id to let our code know which state we want to focus on
+      // * event.target.id will change into either name, price or description
       [event.target.id]: event.target.value
     })
   }
 
-
+  // * ===== Handles our submit =====
   handleSubmit = (event) => {
-
+    //* the default behavior of submit in HTML is to refresh the page
+    //* preventDefault is a way for us to stop our website from refreshing
+    //* we don't want our application to refresh because we want to do more things with it.
+    //* defeats purpose of SPA (single page app - no refresh)
     event.preventDefault()
-    console.log("event", event)
+    // console.log("event", event)
     const newItem = {
-      item: this.state.item,
-      brand: this.state.brand,
-      units: this.state.units,
-      quantity: this.state.quantity
+      name: this.state.name,
+      price: this.state.price,
+      description: this.state.description
     }
-    
+    console.log("we are inside handlesubmit this is our new item", newItem)
 
+    // * adding our new item to our state products
     this.setState({
-      item: '',
-      brand: '',
-      units: '',
-      quantity: 0,
-      products: [newItem, ...this.state.products],
+      //* the spread operator is written with ...
+      //* what it lets us do is add things to our array or objects without mutating the original array or objects
+      //* similar to what push()
+      name: '',
+      price: 0,
+      description: "Describe this item",
+      products: [ newItem, ...this.state.products],
+      // * we can update multiple states in one setState()
+
     })
+
   }
 
-  render() {
+  // ! Demonstration only - to replicate error
+  // ! written as function declaration
+  // handleChange(event) {
+  //   console.log("we are inside handleChange this is our THIS", this)
+  //   console.log(event.target.value)
+  //   this.state.value = event.target.value
+  // }
 
-    return (
-      <div>
-        <h1>Dottie Shopping!</h1>
+	render() {
+    // console.log("we are inside render this is our THIS", this)
+		// console.log(this.state.products)
+		return (
+			<div>
+				<h1>Big Time Shopping!</h1>
+        {/* // * input allows us to type something on the screen
+        // * a form accepts input from the user
+        */}
 
+        {/* 
+        //* onSubmit event listener calls our function handleSubmit
+        */}
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor="item">Item: </label>
-          <input type="text" value={this.state.item} onChange={this.handleChange} id="item" />
+          {/* //* input accepts an attribute called "value" that can take in data 
+          //* input field value attribute can take in any type of data: string, array, obj...
+          */}
+          {/* //* label works with input fields and connects the two together
+          //* we do this by assigning htmlFor inside label and creating an ID inside our input field that matches exactly what the value is for htmlFor.
+
+          //* WHY do we use labels
+          //* good for accesibility such as screen readers
+          //* can click on label to put cursor inside input box
+          */}
+          <label htmlFor="name">Name: </label>
+          <input type="text" value={this.state.name} onChange={this.handleChange} id="name" />
           <br />
-          <label htmlFor="brand">Brand: </label>
-          <input type="text" value={this.state.brand} onChange={this.handleChange} id="brand" />
+          <label htmlFor="price">Price: </label>
+          <input type="text" value={this.state.price} onChange={this.handleChange} id="price"/>
           <br />
-          <label htmlFor="units">Units: </label>
-          <input type="text" value={this.state.units} onChange={this.handleChange} id="units" />
+          <label htmlFor="description">Description: </label>
+          <input type="text" value={this.state.description} onChange={this.handleChange} id="description" />
           <br />
-          <label htmlFor="quantity">Quantity: </label>
-          <input type="text" value={this.state.quantity} onChange={this.handleChange} id="quantity" />
-          <br />
+          {/* submit field 
+          //* when we click this submit button it tells our form that a "submit" event happened
+          */}
           <input type="submit" />
         </form>
-
+        
+        {/* //* we are rendering our state in the div below */}
         <div className="preview">
           <h2>Preview our new item</h2>
-          <h3>{this.state.item}</h3>
-          <h4>{this.state.brand}</h4>
-          <h5>{this.state.units}</h5>
-          <h6>{this.state.quantity}</h6>
+          <h3>{this.state.name}</h3>
+          <h4>{this.state.price}</h4>
+          <h5>{this.state.description}</h5>
         </div>
 
-        <ul className = 'ul'>
-          {
-            this.state.products.map((product, index) => {
-              return (
-                <ProductList key={index} product={product} />
+				<ul>
+					{/* map over our products list that we imported 
+            // map is just another iterator just like any for loops
+            // what makes special is that it lets us return JSX
+            // add item parameter inside our arrow function
+            // each item represents each element in our products array
+            // whether or not we choose to write new syntax or old syntax, we always have to REFER to our state object with the "this" keyword*/}
+					{// * we know that products is an array of items
+					// * best practices for naming convention is to refer to a single object with the singular name of the array
+					this.state.products.map((product, index) => {
+						return (
+              // <li>
+              //   {product.name} {product.price}
+              // </li>
+              // * we are mapping over our products array inside our state which will render our component ProductList 20 times (length of our array)
+              // * each element inside our array is it's own object
+              // * our parameter product is referencing to each element in the array while we map over it
+              // ! WARNING - each child in a list should have unique id
+              // typically use "i" iterator or index
+              <ProductList key = { index } product={product} />
 
-              );
-            })}
-        </ul>
-      </div>
-    );
-  }
+						);
+					})}
+
+					{/* we can call on just one item if we wanted to */}
+					{/* {this.state.products[0].name} */}
+				</ul>
+			</div>
+		);
+	}
 }
 
-
-
+// console.log("we are outside of our component", products)
+// console.log("we are outside trying to access our state", this.state.products)
 
